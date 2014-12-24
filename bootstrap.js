@@ -14,7 +14,7 @@ Cu.import('resource://gre/modules/Services.jsm');
 function install() {}
 function uninstall() {}
 
-function test_notificationCenter_startup() {
+function test_notificationCenter_startup(data, reason) {
     var appInfo = Services.appinfo;
 	var consoleService = Services.console;
     var format_str = "JavaScript-Cocoa Bridge Demo %@ v%@ loaded into %@ v%@ because %@";
@@ -40,8 +40,8 @@ function test_notificationCenter_startup() {
         //NSLog(__NSString("JavaScript-Cocoa Bridge Demo may have launched application %@ v%@"), textEdit.name(), textEdit.version());
        
         var format = CFStringCreateWithCString(null, format_str, kCFStringEncodingUTF8);
-        var extensionID = CFStringCreateWithCString(null, 'extId', kCFStringEncodingUTF8);
-        var extensionVersion = CFStringCreateWithCString(null, 'extVer', kCFStringEncodingUTF8);
+        var extensionID = CFStringCreateWithCString(null, data.id, kCFStringEncodingUTF8);
+        var extensionVersion = CFStringCreateWithCString(null, data.version, kCFStringEncodingUTF8);
         var appName = CFStringCreateWithCString(null, appInfo.name, kCFStringEncodingUTF8);
         var appVersion = CFStringCreateWithCString(null, appInfo.version, kCFStringEncodingUTF8);
         var reason = CFStringCreateWithCString(null, reason_str, kCFStringEncodingUTF8);
@@ -125,10 +125,10 @@ function test_notificationCenter_shutdown() {
     catch (e) { Components.utils.reportError(e); }
 }
 
-function startup() {
+function startup(data, reason) {
 	Cu.import(self.path.modules + 'macosx.js');
 	// can now do stuff with macosx library
-	test_notificationCenter_startup();
+	test_notificationCenter_startup(data, reason);
 }
  
 function shutdown() {
