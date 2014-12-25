@@ -10,7 +10,7 @@ const self = {
 	aData: 0
 };
 Cu.import('resource://gre/modules/Services.jsm');
-
+Cu.import('resource://gre/modules/devtools/Console.jsm');
 
 Cu.import('resource://gre/modules/ctypes.jsm')
 
@@ -1645,7 +1645,7 @@ function startup() {
 }
  
 function shutdown() {
-	var rez_XCD = _dec('XCloseDisplay', GetXDisplay());
+	var rez_XCD = _dec('XCloseDisplay')(GetXDisplay());
 	console.log('deb-msg :: rez_XCD:', rez_XCD, uneval(rez_XCD));
 	for (var l in lib) {
 		lib[l].close();
