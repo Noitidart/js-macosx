@@ -13,7 +13,6 @@ Cu.import('resource://gre/modules/Services.jsm');
 Cu.import('resource://gre/modules/devtools/Console.jsm');
 
 Cu.import('resource://gre/modules/ctypes.jsm')
-
 Cu.import('resource://gre/modules/ctypes.jsm')
 
 var mactypesInit = function() {	
@@ -73,6 +72,14 @@ function _dec(declaration) { // it means ensureDeclared and return declare. if i
 
 // start - predefine your declares here
 var preDec = { //stands for pre-declare (so its just lazy stuff) //this must be pre-populated by dev // do it alphabateized by key so its ez to look through
+	GetCurrentProcess: function() {
+		/* https://github.com/philikon/osxtypes/blob/b359c655b39e947d308163994f7cce94ca14d98f/modules/HIServices.jsm#L543
+		 */
+		return _lib(lib_HIServices).declare('GetCurrentProcess', ctypes.default_abi,
+			ostypes.OSErr,						// return
+			ostypes.ProcessSerialNumberPtr		// 
+		);
+	},
 	SetFrontProcess: function() {
 		/* https://github.com/philikon/osxtypes/blob/b359c655b39e947d308163994f7cce94ca14d98f/modules/HIServices.jsm#L543
 		 */
@@ -111,8 +118,13 @@ var lib_CoreFoundation = '/System/Library/Frameworks/CoreFoundation.framework/Co
 
 function main() {
 	//do code here
-	
+
 	var psn = ostypes.ProcessSerialNumber(0, ostypes.kCurrentProcess);
+	console.info('psn:', psn, psn.toString, uneval(psn));
+
+	var rez_GetCurrentProcess = _dec('GetCurrentProcess')(psn.address());
+	console.info('rez_GetCurrentProcess:', rez_GetCurrentProcess, rez_GetCurrentProcess.toString(), uneval(rez_GetCurrentProcess));
+	
 	console.info('psn:', psn, psn.toString, uneval(psn));
 	
 	var rez_TransformProcessType = _dec('TransformProcessType')(psn.address(), ostypes.kProcessTransformToForegroundApplication);
@@ -137,7 +149,6 @@ try {
 } finally {
 	shutdown();
 }
-
 
 function install() {}
 function uninstall() {}
